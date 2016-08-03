@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExamDetails</title>
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h1 align="center" style="font-family: 'Copperplate Gothic Bold'">Exams List</h1>
+<table align="center" border="2" cellpadding="2" cellspacing="2" style="border: dashed">
+
+{% for i in object_list %}
+    <tr>
+    <td>{{ i.title }}</td>
+    <td>{{ i.about }}</td>
+    <td>{{ i.duration }}</td>
+    <td>{{ i.qCount }}</td>
+    <td>{{ i.total }}</td>
+    <td><a href="../listquestions/{{i.id}}">
+        <button type="button" class="btn btn-primary"><b>View</b>
+        </button></a></td>
+    <td><button type="button" class="btn btn-primary"><b>Update</b> </button></td>
+    <td><button type="button" class="btn btn-primary"><b>Delete</b> </button></td>
+    </tr>
+{% endfor %}
+</table>
+</body>
+</html>

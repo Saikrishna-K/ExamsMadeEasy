@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TEST HOME</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>
+    <ul class="nav navbar-nav">
+        <li><a id="viewExams">List of Exams</a></li>
+    </ul>
+      <ul class="nav navbar-nav" style="text-align: right; float:right">
+          <li type = none ><a href="/OES/logout/">Logout</a></li>
+      </ul>
+  </div>
+</nav>
+<body>
+<h1 align="center">Welcome to Online Examination System</h1>
+    <h3 align="center">{{ user.first_name }}&nbsp{{ user.last_name }}</h3>
+
+    <div id="examlistT">
+    </div>
+
+    <div id="questionsT">
+{#        <form id="questForm" action="/OES/result/"></form>#}
+    </div>
+
+
+<script>
+
+    $('#viewExams').on('click', function loadExams() {
+        //alert("Viewtests");
+         var xhttp = new XMLHttpRequest();
+         var txt = "<ol >",i=0;
+         xhttp.onreadystatechange = function () {
+         if (xhttp.readyState == 4 && xhttp.status == 200) {
+             var jsonObj = JSON.parse(xhttp.responseText);
+        for(i=0;i<jsonObj.length;i++)
+        {
+            txt+="<li><ul type=\"None\">";
+            txt+="<li><b>Title:</b>"+jsonObj[i].pk+"</li>";
+            txt+="<li><b>About:</b>"+jsonObj[i].fields.about+"</li>";
+            txt+="<li><b>questionsT Count:</b>"+jsonObj[i].fields.qCount+"</li>";
+            txt+="<li><b>Total:</b>"+jsonObj[i].fields.total+"</li>";
+            txt+="<li><b>Duration:</b>"+jsonObj[i].fields.duration+"</li>";
+            txt+="<button  id=key-"+jsonObj[i].pk+">TakeTest</button>";
+            txt+="</ul></li><br/>";
+        }
+               // alert(txt);
+              txt+="</ol>"
+
+             document.getElementById("examlistT").innerHTML = txt;
+         }
+     };
+
+         xhttp.open("GET","/OES/listexams/", true);
+         xhttp.send();
+     });
+
+    $('#examlistT').on('click','button[id^=key]',function() {
+        var key = $(this).attr('id').split('-')[1];
+        //alert(key);
+        $.ajax({
+            url:"../startTest/",
+            type:"GET",
+            async:true,
+            data:{
+               pk:key
+            },
+            success:function(jsonObj)
+            {
+
+                $('#examlistT').hide();
+                var i=0;
+                var txt="<h2 id=pk align=center>"+jsonObj[0].fields.exam+"</h2>";
+                for(i=0;i<jsonObj.length;i++)
+                {
+                txt+=jsonObj[i].fields.question+"<br/><br/>";
+                txt+="<input type=radio value="+1+" name=group"+i+">"+jsonObj[i].fields.option1+"<br/>";
+                txt+="<input type=radio value="+2+" name=group"+i+">"+jsonObj[i].fields.option2+"<br/>";
+                txt+="<input type=radio value="+3+" name=group"+i+">"+jsonObj[i].fields.option3+"<br/>";
+                txt+="<input type=radio value="+4+" name=group"+i+">"+jsonObj[i].fields.option4+"<br/>";
+                txt+="<br/>";
+                }
+                txt+="<button  id=submit-"+jsonObj.length+">Submit</button>";
+               // alert(txt);
+                document.getElementById("questionsT").innerHTML = txt;
+            }
+
+         });
+
+    });
+
+    $('#questionsT').on('click','button[id^=submit]', function()
+    {
+        //alert("Submitting Answers");
+
+        var key = document.getElementById('pk').innerHTML;
+
+        var count = $(this).attr('id').split('-')[1];
+        var arr= [];
+        var i=0,value=0;
+        for(i=0;i<count;i++){
+            var index = "group" + i;
+            value=0;
+            value=$('input[name=' + index + ']:checked').val();
+            if(typeof(value) == 'undefined') {
+                arr.push(0);
+               // alert("not Selected");
+            }
+            else{
+                arr.push(value);
+            }
+        }
+
+        //alert(arr);
+        $.ajax({
+           url:'../result',
+            type:'GET',
+            async:true,
+            data:{
+                result:arr,
+                pk:key
+            },
+            success:function(jsonObj)
+            {
+                alert("Number of correct answers "+jsonObj);
+            }
+        });
+    });
+
+</script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List To Update details</title>
+</head>
+<body>
+<table border="2">
+{% for i in index %}
+    <tr>
+    <td>{{ i.title }}</td>
+   <td><a href="../updateexams/{{i.id}}"><button type="button" class="btn btn-primary"><b>UPDATE</b></button></a></td>
+    </tr>
+{% endfor %}
+</table>
+</body>
+</html>

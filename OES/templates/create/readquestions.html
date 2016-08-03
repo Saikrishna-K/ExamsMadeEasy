@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questions</title>
+</head>
+<body>
+<h1 align="center" style="font-family: 'Copperplate Gothic Bold'">Questions for {{ name.exam__title}}</h1>
+<table align="center" border="2" cellpadding="2" cellspacing="2" style="border: dashed">
+{% for i in queryset %}
+    <tr>
+    <td>{{ i.question  }}</td>
+    <td>{{ i.option1 }}</td>
+    <td>{{i.option2 }}</td>
+    <td>{{ i.option3 }}</td>
+    <td>{{i.option4 }}</td>
+    <td>{{ i.correct }}</td>
+    <td><a href="../updatequestion/{{i.id}}">
+        <button type="button" class="btn btn-primary"><b>Update1</b>
+        </button></a></td>
+    <td><a href="../deletequestion/{{i.id}}">
+        <button type="button" class="btn btn-primary"><b>Delete</b>
+        </button></a></td>
+    </tr>
+{% endfor %}
+</table>
+</body>
+</html>

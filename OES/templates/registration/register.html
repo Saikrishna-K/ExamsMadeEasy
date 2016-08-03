@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% extends "base.html" %}
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+
+
+
+{% block content %}
+
+    <h1 align="center">Welcome to Exams Made Easy </h1>
+<h3 align="center">It's an Online Examination System</h3>
+    <div align="center"><h1>Sign Up</h1></div>
+
+
+<div>
+  <div class="row">
+    <form method="post" action="">{% csrf_token %}
+     <div class="row" >
+         <div class="col-xs-6 col-md-6">
+             <table align="center">
+                 {{ form.as_table }}
+             </table>
+               <div align="center"><input type="submit" value="Register" /></div>
+             <div align="center"><a href="/">Login</a></div>
+    </div>
+    </div>
+    </form>
+{% endblock %}
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HOME</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tableStyle.css' %}">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+  </script>
+
+<style type="text/css">
+.form-style-2{
+    max-width: 500px;
+    padding: 20px 12px 10px 20px;
+    font: 13px Arial, Helvetica, sans-serif;
+}
+.form-style-2-heading{
+    font-weight: bold;
+    font-style: italic;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+    font-size: 15px;
+    padding-bottom: 3px;
+}
+.form-style-2 label{
+    display: block;
+    margin: 0px 0px 15px 0px;
+}
+.form-style-2 label > span{
+    width: 100px;
+    font-weight: bold;
+    float: left;
+    padding-top: 8px;
+    padding-right: 5px;
+}
+.form-style-2 span.required{
+    color:red;
+}
+.form-style-2 .tel-number-field{
+    width: 40px;
+    text-align: center;
+}
+.form-style-2 input.input-field{
+    width: 48%;
+
+}
+
+.form-style-2 input.input-field,
+.form-style-2 .tel-number-field,
+.form-style-2 .textarea-field,
+ .form-style-2 .select-field{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid #C2C2C2;
+    box-shadow: 1px 1px 4px #EBEBEB;
+    -moz-box-shadow: 1px 1px 4px #EBEBEB;
+    -webkit-box-shadow: 1px 1px 4px #EBEBEB;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 7px;
+    outline: none;
+}
+.form-style-2 .input-field:focus,
+.form-style-2 .tel-number-field:focus,
+.form-style-2 .textarea-field:focus,
+.form-style-2 .select-field:focus{
+    border: 1px solid #0C0;
+}
+.form-style-2 .textarea-field{
+    height:100px;
+    width: 55%;
+}
+.form-style-2 input[type=submit],
+.form-style-2 input[type=button]{
+    border: none;
+    padding: 8px 15px 8px 15px;
+    background: #FF8500;
+    color: #fff;
+    box-shadow: 1px 1px 4px #DADADA;
+    -moz-box-shadow: 1px 1px 4px #DADADA;
+    -webkit-box-shadow: 1px 1px 4px #DADADA;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+.form-style-2 input[type=submit]:hover,
+.form-style-2 input[type=button]:hover{
+    background: #EA7B00;
+    color: #fff;
+}
+
+
+.padding2
+{
+color: #1B232F;
+font-family: Verdana, Arial, sans-serif;
+font-size: 18px;
+font-weight: bold;
+text-decoration: none;
+padding-left: 45%;
+position: fixed;
+top: 20px;
+ left:50px;
+}
+
+</style>
+
+
+</head>
+
+<nav class="navbar navbar-default" id="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Exams Made Easy</a>
+    </div>
+      <ul class="nav navbar-nav">
+          <li class="active" onclick="load()"><a href="#">Home</a></li>
+      </ul>
+    <ul class="nav navbar-nav" id="Exam">
+{#        <li id="createExams"><a href="/OES/createExams">Create Exam</a></li>#}
+        <li id="createExams" onclick="exams()"><a>Create Exam</a></li>
+        <li id="viewExams" onclick="viewExams()"><a>View Exams</a></li>
+
+    </ul>
+
+    <ul class="nav navbar-nav" id="Test">
+        <li><a id="viewExamsT">Exams List</a></li>
+        <li><a id="viewresultT">Result</a></li>
+    </ul>
+
+      <ul class="nav navbar-nav" style="text-align: right; float:right">
+          <li type = none ><a href="../logout/">Logout</a></li>
+      </ul>
+  </div>
+</nav>
+
+<body onload="load()">
+{#styling#}
+
+<div id="time" value="N"></div>
+
+<div class="size" id="choose">
+        <input type="text" name="test" value="Choose Here" class="field" readonly="readonly" />
+        <ul class="list">
+            <li onclick="ExamShow()">Create Exam</li>
+            <li onclick="TestShow()">Take a Test</li>
+        </ul>
+</div>
+<br/><br/>
+<div class="padding2"  align="right" id="countdown2"></div>
+<div id="welcome">
+<h2 align="center">Welcome to Exams Made Easy </h2>
+<h4 align="center">Hi&nbsp&nbsp {{ user.first_name }}&nbsp{{ user.last_name }}.</h4>
+</div>
+
+<div id="Exam" align="center">
+
+    <div id="examlist">
+
+    </div>
+
+    <div id="addlist"  class="form-style-2" align="center">
+        <div class="form-style-2-heading">Provide Exam Information</div>
+       <form  method="POST" id="addform" >
+           {% csrf_token %}
+                <label for="title1">TITLE</label><input class="input-field" type="text" id="title1"/><br/><br/>
+                <label for="about1">ABOUT</label><input class="input-field" type="text" id="about1"/><br/><br/>
+                <label for="qCount1">NO OF QUESTIONS</label><input class="input-field" type="number" id="qCount1"/><br/><br/>
+                <label for="total1">TOTAL MARKS</label><input class="input-field" type="number" id="total1"/><br/><br/>
+                <label for="duration1">EXAM DURATION</label><input class="input-field" type="number" id="duration1"/><br/><br/>
+                <button type="submit">Save</button>
+       </form>
+   </div>
+
+    <div id="questlist"  class="form-style-2" align="center">
+        <div class="form-style-2-heading"></div>
+        <form  method="POST" id="questform" >
+                {% csrf_token %}
+                <label for="question">Question</label><input class="input-field" type="text" id="question"/><br/><br/>
+                <label for="option1">Option1</label><input class="input-field" type="text" id="option1"/><br/><br/>
+                <label for="option2">Option2</label><input class="input-field" type="text" id="option2"/><br/><br/>
+                <label for="option3">Option3</label><input class="input-field" type="text" id="option3"/><br/><br/>
+                <label for="option4">Option4</label><input class="input-field" type="text" id="option4"/><br/><br/>
+                <label for="correct">correct</label><input class="input-field" type="text" id="correct"/><br/><br/>
+                <button type="submit">Save</button>
+       </form>
+    </div>
+</div>
+
+<div id="Test">
+
+    <div id="examlistT">
+    </div>
+
+    <div id="questionsT">
+    </div>
+
+</div>
+
+
+
+{#for Exam Creation#}
+<script>
+
+    function exams()
+    {
+        $('#addlist').show();
+        $('#examlist').hide();
+        $('#questlist').hide();
+
+    }
+
+    function load()
+    {
+        $('#welcome').show();
+        $('#addlist').hide();
+        $('#examlist').hide();
+        $('#questlist').hide();
+        $('#Exam').hide();
+        $('#Test').hide();
+        $('#examlistT').hide();
+        $('#questionsT').hide();
+
+    }
+    function viewExams()
+    {
+        $('#addlist').hide();
+        $('#examlist').show();
+        $('#questlist').hide();
+
+    }
+
+    function question()
+    {
+        $('#addlist').hide();
+        $('#examlist').hide();
+{#        $('#updatelist').hide();#}
+        $('#questlist').show();
+    }
+
+    $('#addform').submit(function (e){
+       // alert("Hai Add form");
+        e.preventDefault();
+        $.ajax({
+            url: "/OES/createExams/",
+            type: "POST",
+            async:true,
+            data: {
+                f:'exam',
+                title: $('#title1').val(),
+                about: $('#about1').val(),
+                qCount: $('#qCount1').val(),
+                marks: $('#marks1').val(),
+                total: $('#total1').val(),
+                duration: $('#duration1').val()
+            },
+            success:function(data)
+            {
+                //alert(data);
+                question();
+            }
+        });
+
+    });
+
+
+    $('#questform').submit(function(e) {
+     //alert("In questions adding section");
+     e.preventDefault();
+        $.ajax({
+{#            url:'../createQuestion',#}
+              url: "/OES/createExams/",
+            type:"POST",
+            async:true,
+            data:{
+                f:"question",
+                question:$('#question').val(),
+                option1:$('#option1').val(),
+                option2:$('#option2').val(),
+                option3:$('#option3').val(),
+                option4:$('#option4').val(),
+                correct:$('#correct').val()
+            },
+            success:function(obj){
+                //alert("Added Question");
+              $('#question').val(""),
+              $('#option1').val(""),
+              $('#option2').val(""),
+              $('#option3').val(""),
+              $('#option4').val(""),
+              $('#correct').val(""),
+              question();
+            }
+        });
+    });
+
+
+    $('#viewExams').on('click', function loadExams() {
+        viewExams();
+        //alert("ViewExams");
+         var xhttp = new XMLHttpRequest();
+         var txt = "<ol >",i=0;
+         xhttp.onreadystatechange = function () {
+         if (xhttp.readyState == 4 && xhttp.status == 200) {
+             var jsonObj = JSON.parse(xhttp.responseText);
+             txt += "";
+             txt += "<table><caption><h3>Exams Created By You</h3></caption><thead><tr> <th>Title</th> <th>About</th> <th>Question Count</th>  <th>Total Marks</th>" +
+                     "<th>Duration(in Minutes)</th><th>Results</th></tr></thead><tbody>";
+
+             if (jsonObj.length == 0) {
+                 alert("No Exams are present");
+             }
+             else {
+
+
+                 for (i = 0; i < jsonObj.length; i++) {
+                     txt += "<tr> <td><strong id=key>" + jsonObj[i].pk + "</strong></td>" +
+                             " <td>" + jsonObj[i].fields.about + "</td>" +
+                             " <td>" + jsonObj[i].fields.qCount + "</td>" +
+                             " <td>" + jsonObj[i].fields.total + "</td>" +
+                             "<td>" + jsonObj[i].fields.duration + "</td>"+
+                             "<td><button  onclick=results()>ViewResults</button></td></tr>";
+                 }
+                 // alert(txt);
+                 txt += "</tbody></table>";
+
+                 document.getElementById("examlist").innerHTML = txt;
+             }
+         }
+     };
+
+         xhttp.open("GET","/OES/listexams/", true);
+         xhttp.send();
+     });
+
+   function results() {
+
+       var key = $('#key').text();
+       alert(key);
+       $.ajax({
+           url: '../listresultuser',
+           type: 'GET',
+           async: true,
+           data: {
+               pk: key
+           },
+           success: function (jsonObj) {
+               var i = 0;
+               //alert(jsonObj[0].fields.exam);
+
+               var txt = "<h2 align=center>Results of your Exams</h2>" +
+                       "<table><thead><tr><th>userID</th><th>Exam</th><th>Marks Scored</th><th>Attempt Date</td></tr>" +
+                       "</th></thead>";
+
+               for (i = 0; i < jsonObj.length; i++) {
+                   txt += "<tr><td>" + jsonObj[i].fields.userID + "</td>" +
+                           "<td>" + jsonObj[i].fields.exam + "</td>" +
+                           " <td>" + jsonObj[i].fields.marks + "</td>" +
+                           "<td>" + jsonObj[i].fields.attempt_time + "</td>" +
+                           "</tr>";
+               }
+               txt += "</table>";
+               //alert(txt);
+               $('#examlistT').show();
+
+               document.getElementById("examlist").innerHTML = txt;
+           }
+       });
+   }
+
+
+
+{#for Test Taking#}
+
+
+    $('#viewExamsT').on('click', function loadExams() {
+        //alert("Viewtests");
+         var xhttp = new XMLHttpRequest();
+         var txt = "<ol >",i=0;
+
+        txt+="";
+         xhttp.onreadystatechange = function () {
+         if (xhttp.readyState == 4 && xhttp.status == 200) {
+             var jsonObj = JSON.parse(xhttp.responseText);
+             txt += "<table><caption><h3>All Exams</h3></caption><thead><tr> <th>Title</th> <th>About</th> <th>Question Count</th><th>Total Marks</th>" +
+                     "<th>Duration(in Minutes)</th><th>Click</th></tr></thead><tbody>";
+
+             if (jsonObj.length == 0) {
+                 alert("No Exams are present");
+             }
+             else {
+                    //alert(jsonObj[i].pk);
+                // var key = jsonObj[i].pk;
+                 for (i = 0; i < jsonObj.length; i++) {
+                     txt += "<tr> <td><strong id=key>" + jsonObj[i].pk + "</strong></td>" +
+                             " <td>" + jsonObj[i].fields.about + "</td>" +
+                             " <td>" + jsonObj[i].fields.qCount + "</td>" +
+                             " <td>" + jsonObj[i].fields.total + "</td>" +
+                             "<td>" + jsonObj[i].fields.duration + "</td>" +
+                             "<td align=center><button  id=key-" + jsonObj[i].fields.duration + "  " +
+                             ">TakeTest</button></td></tr>";
+                 }
+                 txt += "</tbody></table>";
+                 document.getElementById("examlistT").innerHTML = txt;
+                 $('#examlistT').show();
+             }
+         }
+     };
+
+         xhttp.open("GET","/OES/tests/", true);
+         xhttp.send();
+     });
+
+    $('#examlistT').on('click','button[id^=key]',function() {
+
+       $('#questionsT').show();
+        $('#welcome').hide();
+        var key = $('#key').text();
+        var ExamDuration = $(this).attr('id').split('-')[1];
+       // alert(key);
+        $.ajax({
+            url:"../startTest/",
+            type:"GET",
+            async:true,
+            data:{
+               pk:key
+            },
+            success:function(jsonObj)
+            {
+                $('#time').val('Y');
+                $('#choose').hide();
+                $('#examlistT').hide();
+                var i=0;
+                var txt="<h2 id=pk align=center>"+jsonObj[0].fields.exam+"</h2>";
+                for(i=0;i<jsonObj.length;i++)
+                {
+                txt+=jsonObj[i].fields.question+"<br/><br/>";
+                txt+="<input type=radio value="+1+" name=group"+i+">"+jsonObj[i].fields.option1+"<br/>";
+                txt+="<input type=radio value="+2+" name=group"+i+">"+jsonObj[i].fields.option2+"<br/>";
+                txt+="<input type=radio value="+3+" name=group"+i+">"+jsonObj[i].fields.option3+"<br/>";
+                txt+="<input type=radio value="+4+" name=group"+i+">"+jsonObj[i].fields.option4+"<br/>";
+                txt+="<br/>";
+                }
+                txt+="<button  id=submit-"+jsonObj.length+">Submit</button>";
+               // alert(txt);
+
+                document.getElementById("questionsT").innerHTML = txt;
+                $('#countdown2').show();
+                $('#navbar').hide();
+                countdown( "countdown2", ExamDuration, 0 );
+            }
+         });
+    });
+
+
+    $('#questionsT').on('click','button[id^=submit]', function()
+    {
+        //alert("Submitting Answers");
+          $('#time').val('N');
+          $('#choose').show();
+          $('#welcome').show();
+          $('#countdown2').hide();
+          $('#navbar').show();
+        var key = document.getElementById('pk').innerHTML;
+        var count = $(this).attr('id').split('-')[1];
+        var arr= [];
+        var i=0,value=0;
+        for(i=0;i<count;i++){
+            var index = "group" + i;
+            value=0;
+            value=$('input[name=' + index + ']:checked').val();
+            if(typeof(value) == 'undefined') {
+                arr.push(0);
+               // alert("not Selected");
+            }
+            else{
+                arr.push(value);
+            }
+        }
+        document.getElementById("questionsT").innerHTML ="";
+        //alert(arr);
+        $.ajax({
+           url:'../result',
+            type:'GET',
+            async:true,
+            data:{
+                result:arr,
+                pk:key
+            },
+            success:function(jsonObj)
+            {
+                alert("Number of correct answers "+jsonObj);
+            }
+        });
+    });
+
+
+    $('#viewresultT').on('click',function()
+    {
+       // alert("In results");
+        $.ajax({
+           url:'../listresult',
+            type:'GET',
+            async:true,
+            data:{
+
+            },
+            success:function(jsonObj)
+            {
+                var i=0;
+                //alert(jsonObj[0].fields.exam);
+
+                    var txt = "<h2 align=center>Results of your Exams</h2>" +
+                            "<table><thead><tr><th>Exam</th><th>Marks Scored</th><th>Attempt Date</td></tr></th>";
+
+                    for (i = 0; i < jsonObj.length; i++) {
+                        txt += "<tr><td>" + jsonObj[i].fields.exam + "</td>" +
+                                " <td>" + jsonObj[i].fields.marks + "</td>" +
+                                "<td>" + jsonObj[i].fields.attempt_time + "</td>" +
+                                "</tr>";
+                    }
+                    txt += "</table>";
+                    //alert(txt);
+                $('#examlistT').show();
+                    document.getElementById("examlistT").innerHTML = txt;
+                }
+        });
+
+    });
+
+
+
+</script>
+
+{#for style#}
+<script>
+{#    styling #}
+    (function($){
+	$.fn.styleddropdown = function(){
+		return this.each(function(){
+			var obj = $(this);
+			obj.find('.field').click(function() { //onclick event, 'list' fadein
+			obj.find('.list').fadeIn(400);
+
+			$(document).keyup(function(event) { //keypress event, fadeout on 'escape'
+				if(event.keyCode == 27) {
+				obj.find('.list').fadeOut(400);
+				}
+			});
+
+			obj.find('.list').hover(function(){ },
+				function(){
+					$(this).fadeOut(400);
+				});
+			});
+
+			obj.find('.list li').click(function() { //onclick event, change field value with selected 'list' item and fadeout 'list'
+			obj.find('.field')
+				.val($(this).html())
+				.css({
+					'background':'#fff',
+					'color':'#333'
+				});
+			obj.find('.list').fadeOut(400);
+			});
+		});
+	};
+})(jQuery);
+
+$(function(){
+	$('.size').styleddropdown();
+});
+
+
+</script>
+
+
+<script>
+    function ExamShow()
+    {
+        $('#welcome').hide();
+        $('#Exam').show();
+        $('#Test').hide();
+        $('#examlistT').hide();
+        $('#questionsT').hide();
+    }
+    function TestShow()
+    {
+        $('#welcome').hide();
+        $('#Test').show();
+        $('#Exam').hide();
+        $('#addlist').hide();
+        $('#examlist').hide();
+        $('#questlist').hide();
+    }
+
+
+</script>
+
+<script type="text/javascript">
+function countdown( elementName, minutes, seconds )
+{
+    var element, endTime, hours, mins, msLeft, time;
+
+    function twoDigits( n )
+    {
+        return (n <= 9 ? "0" + n : n);
+    }
+
+    function updateTimer()
+    {
+        msLeft = endTime - (+new Date);
+        if ( msLeft < 1000 ) {
+            element.innerHTML = "Time is Up";
+            alert("Time Up");
+             $('#navbar').show();
+             $('#questionsT').trigger('click');
+             $('#choose').show();
+                load();
+            //here comes when time is over.
+
+        }
+         else if ( $('#time').val()== 'N')
+        {
+          exit();
+        }
+        else {
+            time = new Date( msLeft );
+            hours = time.getUTCHours();
+            mins = time.getUTCMinutes();
+            element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+            setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+        }
+    }
+
+    element = document.getElementById( elementName );
+    endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
+    updateTimer();
+}
+</script>
+
+
+
+
+
+</body>
+
+
+</html>
